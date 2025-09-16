@@ -2,6 +2,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import Logo from "../images/Logo.svg";
 import { Home, Users, Calendar, FileText, Clipboard, Box, Activity, CreditCard } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Link } from "react-router-dom";
+import InfoDeskStaffView from "./patient.jsx"; 
+import Appointment  from "./appointment";
 
 export default function DashboardPage() {
   const performanceData = [
@@ -46,26 +49,43 @@ export default function DashboardPage() {
                     <Home className="w-4 h-4" />
                     <span>Dashboard</span>
                 </a>
-                <a href="#" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
+                 <Link
+                    to="/patient"
+                    className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
                     <Users className="w-4 h-4" />
                     <span>Patient Management</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
+                  </Link>
+                  
+                <Link
+                to="/appointment"
+                className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
                     <Calendar className="w-4 h-4" />
                     <span>Appointment</span>
-                </a>
-                <a href="#" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
+                </Link>
+
+                <Link
+                to="/doctordashboard"
+                 className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
                     <FileText className="w-4 h-4" />
                     <span>Physician Record</span>
-                </a>
+                </Link>
                 <a href="#" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
                     <Clipboard className="w-4 h-4" />
                     <span>Billing</span>
                 </a>
-                <a href="#" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
+                <Link
+                 to="/medecineinventory
+                 
+                 " className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
                     <Box className="w-4 h-4" />
                     <span>Medicine Inventory</span>
-                </a>
+                </Link>
+
+                <Link
+                 to="/cashier" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
+                    <Box className="w-4 h-4" />
+                    <span>Cashier Dashboard</span>
+                </Link>
                 <a href="#" className="flex items-center px-3 py-2 rounded-md hover:bg-gray-100 space-x-2">
                     <Activity className="w-4 h-4" />
                     <span>Dispensing</span>

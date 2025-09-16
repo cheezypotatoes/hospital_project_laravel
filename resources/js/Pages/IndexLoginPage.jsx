@@ -1,26 +1,45 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";   // ✅ import here
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Eye, EyeOff } from "lucide-react"; // 👁️ icons
-import "../css/app.css";
-import Logo from "../images/Logo.svg"; // adjust path based on your project
-import Dashboard from '../Pages/Dashboard'; // adjust the path
+import { Card, CardContent } from "../Components/Card.jsx";
+import { Button } from "../Components/Button.jsx";
+import { Input } from "../Components/Input.jsx";
+import { Label } from "../Components/Label.jsx";
+import { Eye, EyeOff } from "lucide-react";
+import Logo from "../Images/Logo.svg"; 
 
-export default function LoginPage() {
+export default function IndexLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👁️ state
-  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login with:", { email, password });
+    setError(""); // reset previous errors
 
-    // 👉 Redirect to dashboard
-    navigate("/dashboard");
+    try {
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content"),
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Laravel usually redirects after login
+        window.location.href = data.redirect || "/dashboard";
+      } else {
+        setError(data.message || "Login failed. Check credentials.");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An unexpected error occurred.");
+    }
   };
 
   return (
@@ -29,7 +48,7 @@ export default function LoginPage() {
         <CardContent className="p-0 flex">
           {/* Left Side - Logo */}
           <div className="hidden md:flex items-center justify-center rounded-l-2xl w-1/2 p-6">
-            <img src={Logo} alt="JMC Logo" className="h-75 w-auto" />
+            <img src={Logo} alt="Logo" className="h-75 w-auto" />
           </div>
 
           {/* Right Side - Login Form */}
@@ -38,8 +57,11 @@ export default function LoginPage() {
               Login
             </h1>
 
+            {error && (
+              <p className="text-red-600 text-center mb-4">{error}</p>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-gray-700 font-medium">
                   Email
@@ -55,14 +77,13 @@ export default function LoginPage() {
                 />
               </div>
 
-              {/* Password with toggle */}
               <div className="space-y-2 relative">
                 <Label htmlFor="password" className="text-gray-700 font-medium">
                   Password
                 </Label>
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"} // toggle type
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -78,7 +99,6 @@ export default function LoginPage() {
                 </button>
               </div>
 
-              {/* Submit */}
               <Button
                 type="submit"
                 className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
